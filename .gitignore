@@ -1,0 +1,9 @@
+# folder to ignore
+.pytest_cache
+.ipynb_checkpoints
+.vscode
+
+
+# files to ignore
+*.csv
+*.json
