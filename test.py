@@ -45,4 +45,4 @@ sentence_embedder = EmbedSentence()
 embeddings = torch.Tensor()
 
 for batch in tqdm(dataloader):
-    embeddings = torch.cat((embeddings, sentence_embedder.embedder(batch)))
+    embeddings = torch.cat((embeddings, sentence_embedder.embedder(batch)), dim=0)
