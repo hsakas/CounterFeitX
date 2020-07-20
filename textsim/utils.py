@@ -6,6 +6,7 @@ import torch
 import numpy as np
 from flair.data import Sentence
 from torch.utils.data import Dataset
+from typing import List
 
 
 # pylint: disable=too-few-public-methods
@@ -70,3 +71,47 @@ class SentenceDataset(Dataset):
 
         sample = self.embedding.embed_str(sample)
         return sample
+
+
+class SentencesDataset(Dataset):
+    """
+    Sentence Dataset will embed any incoming sentence into a tensor of default size
+
+    """
+
+    def __init__(self, sentences_list: List[np.ndarray], transform=None):
+        """
+
+        :param sentences: a numpy array, for example: np.array(['hello world', 'this is world news'])
+        :param transform: any torch transform functions
+        """
+        self.sentences_list = sentences_list
+        self.transform = transform
+        self.embedding = EmbedSentence()
+
+    def __len__(self) -> int:
+        """
+        :return: the length of the sentences
+        """
+        return len(self.sentences_list)
+
+    def __getitem__(self, idx) -> torch.Tensor:
+        """
+        :param idx: index of sentence
+        :return: torch tensor for the specified idx
+        """
+        if torch.is_tensor(idx):
+            idx = idx.tolist()
+
+        samples = self.sentences_list[idx]
+
+        # if self.transform:
+        #     sample = self.transform(samples)
+
+        temp_sample = torch.zeros(100)
+
+        for sample in samples:
+            sample = self.embedding.embed_str(sample)
+            temp_sample += sample
+
+        return temp_sample
