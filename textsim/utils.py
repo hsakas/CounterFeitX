@@ -79,14 +79,13 @@ class SentencesDataset(Dataset):
 
     """
 
-    def __init__(self, sentences_list: List[np.ndarray], transform=None):
+    def __init__(self, sentences_list: List[np.ndarray]):
         """
 
-        :param sentences: a numpy array, for example: np.array(['hello world', 'this is world news'])
-        :param transform: any torch transform functions
+        :param sentences_list: a numpy array, for example: [np.array(['hello world', 'this is world news']),
+        np.array(['hello world', 'this is world news'])]
         """
         self.sentences_list = sentences_list
-        self.transform = transform
         self.embedding = EmbedSentence()
 
     def __len__(self) -> int:
@@ -104,9 +103,6 @@ class SentencesDataset(Dataset):
             idx = idx.tolist()
 
         samples = self.sentences_list[idx]
-
-        # if self.transform:
-        #     sample = self.transform(samples)
 
         temp_sample = torch.zeros(100)
 
