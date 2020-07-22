@@ -34,7 +34,17 @@ if __name__ == '__main__':
     t.build(100)
 
     # query using a index
-    print(t.get_nns_by_item(0, 10))
+    from timeit import default_timer as timer
+
+    start = timer()
+    print(t.get_nns_by_item(0, 100))
+    end = timer()
+    print('before filter->', end-start)
+
+    start = timer()
+    print([i for i in t.get_nns_by_item(0, 100) if round(t.get_distance(0, i), 2)==0.0])
+    end = timer()
+    print('after filter->', end-start)
 
     # query using a vector
     # print(t.get_nns_by_vector(..., 10))
