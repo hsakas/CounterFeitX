@@ -2,6 +2,8 @@
 @author: aswamy
 
 """
+from timeit import default_timer as timer
+
 # pylint: disable=invalid-name
 import pandas as pd
 from annoy import AnnoyIndex
@@ -33,18 +35,18 @@ if __name__ == '__main__':
     # build the tree
     t.build(100)
 
-    # query using a index
-    from timeit import default_timer as timer
+    # save the tree
+    t.save('./trees/test.tree')
 
     start = timer()
-    print(t.get_nns_by_item(0, 100))
+    print(t.get_nns_by_item(0, 10))
     end = timer()
-    print('before filter->', end-start)
+    print('before filter->', end - start)
 
     start = timer()
-    print([i for i in t.get_nns_by_item(0, 100) if round(t.get_distance(0, i), 2)==0.0])
+    print([i for i in t.get_nns_by_item(0, 100) if round(t.get_distance(0, i), 2) == 0.0])
     end = timer()
-    print('after filter->', end-start)
+    print('after filter->', end - start)
 
     # query using a vector
     # print(t.get_nns_by_vector(..., 10))
