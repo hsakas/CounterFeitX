@@ -13,7 +13,7 @@ from flair.embeddings import StackedEmbeddings
 from flair.embeddings import WordEmbeddings
 
 # pylint: disable=invalid-name
-sentence = "nikee adibas this is fine pume rebok adibas hrxx" * 100
+sentence = "nike adibas this is fine pume rebok adibas hrxx" * 100
 
 sentence = Sentence(sentence)
 word_embedding = WordEmbeddings('glove')
@@ -41,8 +41,10 @@ cos = nn.CosineSimilarity(dim=1, eps=1e-6)
 
 # build a tree for all brands
 t = AnnoyIndex(2048, 'angular')
+
 for i, token in enumerate(keywords):
     t.add_item(i, token.embedding)
+
 t.build(100)
 
 if __name__ == "__main__":
@@ -53,9 +55,10 @@ if __name__ == "__main__":
         match = t.get_nns_by_vector(token.embedding, 1)[0]
         sim_score = float(cos(token.embedding.view(-1, 2048),
                               torch.tensor(t.get_item_vector(match)).view(-1, 2048)))
-        if sim_score >= 0.6:
+
+        if 0.6 <= sim_score <= 0.8:
             print(f'Found Counterfeit')
-            print(f"Found counterfeit {token} with a {round(sim_score, 2)} similarity to brand {keywords[match]}")
+            print(f"Found Counterfeit {token} with a {round(sim_score, 2)} similarity to brand {keywords[match]}")
             found_match = True
 
         if found_match:
