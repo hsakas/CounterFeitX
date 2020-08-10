@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 from annoy import AnnoyIndex
 
-from textsim.utils import EmbedSentence
+from searcher.char2vec import sentence_char2vec
 
 
 class FakeDetector:
@@ -22,9 +22,9 @@ class FakeDetector:
         """
         self.tree = None
         self.cos = nn.CosineSimilarity(dim=1, eps=1e-6)
-        self.embedder = EmbedSentence()
+        # self.embedder = EmbedSentence()
 
-    def build(self, brand_names: str, n_tree: int = 100, embedding_size: int = 2048):
+    def build(self, brand_names: str, n_tree: int = 100, embedding_size: int = 100):
         """
         #TODO: fill details of param
         :param brand_names:
@@ -32,15 +32,15 @@ class FakeDetector:
         :param embedding_size:
         :return:
         """
-        brand_names_sentence = self.embedder.stacked_embed(brand_names, return_sentence=True)
+        brand_names_sentence = sentence_char2vec(brand_names)
         self.tree = AnnoyIndex(embedding_size, 'angular')
 
-        for value, _token in enumerate(brand_names_sentence):
-            self.tree.add_item(value, _token.embedding)
+        for value, (_, _token) in enumerate(brand_names_sentence.items()):
+            self.tree.add_item(value, _token)
 
         self.tree.build(n_tree)
 
-    def fake_detector(self, text: str, embedding_size: int = 2048, detection_range: Tuple = (0.65, 0.8)) -> bool:
+    def fake_detector(self, text: str, embedding_size: int = 100, detection_range: Tuple = (0.97, 0.99)) -> bool:
         """
         #TODO: fill details of params
         :param text:
@@ -49,10 +49,10 @@ class FakeDetector:
         :return:
         """
         found_match = False
-        text_sentence = self.embedder.stacked_embed(text, return_sentence=True)
-        for _, _token in enumerate(text_sentence):
-            match = self.tree.get_nns_by_vector(_token.embedding, 1)[0]
-            sim_score = round(float(self.cos(_token.embedding.view(-1, embedding_size),
+        text_sentence = sentence_char2vec(text)
+        for _, (_, _token) in enumerate(text_sentence.items()):
+            match = self.tree.get_nns_by_vector(_token, 1)[0]
+            sim_score = round(float(self.cos(_token.view(-1, embedding_size),
                                              torch.tensor(self.tree.get_item_vector(match)).view(-1, embedding_size))),
                               2)
 
