@@ -26,7 +26,7 @@ dataloader = DataLoader(dataset=sentence_dataset, batch_size=30, shuffle=False)
 if __name__ == "__main__":
     start = time()
     detector = FakeDetector()
-    detector.build(brand_names=keywords)
+    detector.build(brand_names=keywords, embedding_size=100)
 
     for batch in tqdm(dataloader):
         for _, vec in enumerate(batch):
