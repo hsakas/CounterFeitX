@@ -39,7 +39,6 @@ class BrandDetector:
     @staticmethod
     def get_brand_tensors(path: str = './cv/brands') -> Tensor:
         """
-
         :param path: direct to the path where are the brand logos are saved
         :return: returns a batch of tensor of all the logos converted into tensors
         """
@@ -71,7 +70,6 @@ class BrandDetector:
         :param detection_threshold:
         :return:
         """
-
         # convert slices to a batch
         batch = slices2batch(slices)
         output = self.model(batch.float())

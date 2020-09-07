@@ -10,3 +10,4 @@
 *.jpg
 *.png
 
+classifiers/__pycache__/

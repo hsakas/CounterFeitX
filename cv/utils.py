@@ -2,6 +2,7 @@
 @author: aswamy
 @github: hsakas
 """
+
 from typing import Union
 
 from PIL import Image
@@ -16,7 +17,6 @@ from cv.GLOBALS import STD_IMG_TUPLE_MULTI, STD_IMG_TUPLE_SINGLE, STD_IMG_SIZE
 # open image and resize
 def open_resize(img_path: str, size: int = 512) -> np.ndarray:
     """
-
     :param img_path: path to the specified image
     :param size: size to be resized into
     :return: numpy array
